@@ -1,0 +1,19 @@
+# Hermes Pocket — nginx : sert la PWA et relaie /v1 vers l'API Hermes.
+server {
+    listen 80;
+    server_name _;
+    root /usr/share/nginx/html;
+    index index.html;
+    client_max_body_size 50M;
+    location /v1/ {
+        proxy_pass ${HERMES_API}/v1/;
+        proxy_set_header Authorization "Bearer ${HERMES_KEY}";
+        proxy_set_header Host $host;
+        proxy_set_header Origin "";
+        proxy_http_version 1.1;
+        proxy_set_header Connection "";
+        proxy_buffering off;
+        proxy_read_timeout 3600s;
+    }
+    location / { try_files $uri $uri/ /index.html; }
+}

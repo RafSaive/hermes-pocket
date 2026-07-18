@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Hermes">
+<meta name="theme-color" content="#0b0f17">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="stylesheet" href="styles.css">
+<title>Hermes Pocket</title>
+</head>
+<body>
+<header id="topbar">
+  <button id="menuBtn" class="icon-btn" aria-label="Conversations">☰</button>
+  <div class="title">
+    <span class="logo"></span>
+    <span id="convTitle">Hermes</span>
+  </div>
+  <button id="settingsBtn" class="icon-btn" aria-label="Réglages">⚙︎</button>
+</header>
+
+<!-- Tiroir des conversations -->
+<aside id="drawer" class="drawer" hidden>
+  <div class="drawer-head">
+    <strong>Conversations</strong>
+    <button id="newChatBtn" class="pill-btn">+ Nouveau</button>
+  </div>
+  <ul id="convList" class="conv-list"></ul>
+  <div class="drawer-foot">Hermes Pocket · <a href="https://lcn.ac" target="_blank" rel="noopener">lcn.ac</a></div>
+</aside>
+<div id="scrim" class="scrim" hidden></div>
+
+<main id="log" class="log"></main>
+
+<!-- Zone de saisie -->
+<form id="composer" class="composer">
+  <div id="attachTray" class="attach-tray" hidden></div>
+  <div class="composer-row">
+    <input id="fileInput" type="file" multiple hidden
+           accept="image/*,.pdf,.txt,.md,.csv,.json,.log,.docx,.py,.js,.ts,.html,.css,.yaml,.yml,.xml">
+    <input id="camInput" type="file" accept="image/*" capture="environment" hidden>
+    <button type="button" id="attachBtn" class="icon-btn" aria-label="Joindre un fichier">＋</button>
+    <button type="button" id="camBtn" class="icon-btn" aria-label="Prendre une photo">▣</button>
+    <textarea id="input" rows="1" placeholder="Écris à Hermes…" autocomplete="off" enterkeyhint="send"></textarea>
+    <button type="submit" id="sendBtn" class="send-btn" aria-label="Envoyer" disabled>➤</button>
+    <button type="button" id="stopBtn" class="send-btn stop" aria-label="Arrêter" hidden>■</button>
+  </div>
+</form>
+
+<!-- Réglages -->
+<dialog id="settings">
+  <h2>Réglages</h2>
+  <label>URL de base de l'API Hermes</label>
+  <input id="setBase" placeholder="(vide = via le proxy de cette app)">
+  <p class="hint">Laisse vide si l'app est servie derrière le proxy nginx fourni. Sinon, ex. <code>http://100.70.160.21:8642</code>.</p>
+  <label>Modèle</label>
+  <input id="setModel" placeholder="hermes-agent">
+  <label>Clé API (optionnel)</label>
+  <input id="setKey" type="password" placeholder="(inutile si le proxy injecte la clé)">
+  <p class="hint">Ne remplis la clé que si tu appelles Hermes en direct (sans le proxy). Elle est stockée sur cet appareil uniquement.</p>
+  <div class="row-end">
+    <button class="ghost" id="setCancel" type="button">Fermer</button>
+    <button class="primary" id="setSave" type="button">Enregistrer</button>
+  </div>
+</dialog>
+
+<!-- Libs (CDN autorisé cdnjs) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.1.6/purify.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.8.0/mammoth.browser.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
