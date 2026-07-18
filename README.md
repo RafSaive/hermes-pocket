@@ -185,7 +185,7 @@ Contributions welcome (issues & PRs).
 
 ## Credits & license
 
-Created by **Rafael Saive** — [Le Chemin Numérique ASBL](https://lcn.ac) (`lcn.ac`).
+Created by **Rafael Saive** — Le Chemin Numérique — [lecheminnumerique.be](https://lecheminnumerique.be) · [lcn.ac](https://lcn.ac)
 
 Hermes Agent is a project by [Nous Research](https://github.com/NousResearch/hermes-agent) (not affiliated with this client).
 

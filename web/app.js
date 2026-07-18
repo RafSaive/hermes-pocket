@@ -183,7 +183,7 @@ async function handleFiles(files) {
   for (const f of files) {
     try {
       if (f.type.startsWith("image/")) {
-        const dataURL = await readAsDataURL(f);
+        const dataURL = await downscaleImage(f);
         pending.push({ kind: "image", name: f.name, dataURL });
       } else {
         const text = await extractText(f);
@@ -215,6 +215,28 @@ const readAsDataURL = (f) => new Promise((res, rej) => {
 const readAsText = (f) => new Promise((res, rej) => {
   const r = new FileReader(); r.onload = () => res(r.result); r.onerror = () => rej(r.error); r.readAsText(f);
 });
+// Réduit une image côté navigateur avant envoi (évite les erreurs 413).
+function downscaleImage(file, maxDim = 1568, quality = 0.85) {
+  return new Promise((resolve, reject) => {
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = () => {
+      URL.revokeObjectURL(url);
+      let { width: w, height: h } = img;
+      if (Math.max(w, h) > maxDim) {
+        const s = maxDim / Math.max(w, h);
+        w = Math.round(w * s); h = Math.round(h * s);
+      }
+      const c = document.createElement("canvas");
+      c.width = w; c.height = h;
+      c.getContext("2d").drawImage(img, 0, 0, w, h);
+      resolve(c.toDataURL("image/jpeg", quality));
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); reject(new Error("image illisible")); };
+    img.src = url;
+  });
+}
+
 async function extractText(f) {
   const name = f.name.toLowerCase();
   if (name.endsWith(".pdf")) {

@@ -148,6 +148,6 @@ hermes-pocket/
 
 ## Crédits & licence
 
-Créé par **Rafael Saive** — [Le Chemin Numérique ASBL](https://lcn.ac) (`lcn.ac`).
+Créé par **Rafael Saive** — Le Chemin Numérique — [lecheminnumerique.be](https://lecheminnumerique.be) · [lcn.ac](https://lcn.ac)
 Hermes Agent est un projet de [Nous Research](https://github.com/NousResearch/hermes-agent) (non affilié).
 Licence **MIT** — voir [`LICENSE`](./LICENSE).

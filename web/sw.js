@@ -1,5 +1,5 @@
 /* Hermes Pocket — service worker : cache l'app-shell, jamais l'API. */
-const CACHE = "hermes-pocket-v1";
+const CACHE = "hermes-pocket-v2";
 const SHELL = [
   "./index.html", "./styles.css", "./app.js", "./manifest.json",
   "./icons/icon-192.png", "./icons/icon-512.png", "./icons/apple-touch-icon.png"
