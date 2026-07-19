@@ -78,10 +78,45 @@ function renderUser(m) {
   });
   log.appendChild(d);
 }
-function renderBot(text) {
-  const d = el("div", "msg bot", md(text));
+function renderBot() {
+  const d = el("div", "msg bot");
   log.appendChild(d);
   return d;
+}
+function finalizeBot(d, raw) {
+  d.innerHTML = md(raw);
+  enhanceCode(d);
+  const tools = el("div", "msgtools");
+  const cp = el("button", null, "⧉ Copier");
+  cp.onclick = () => copyText(raw, cp, "⧉ Copier");
+  tools.appendChild(cp);
+  d.appendChild(tools);
+}
+function enhanceCode(container) {
+  container.querySelectorAll("pre").forEach((pre) => {
+    if (pre.querySelector(".codecopy")) return;
+    const code = pre.querySelector("code") || pre;
+    const b = el("button", "codecopy", "copier");
+    b.onclick = () => copyText(code.innerText, b, "copier");
+    pre.appendChild(b);
+  });
+}
+function copyText(text, btn, label) {
+  const ok = () => { btn.textContent = "✓"; setTimeout(() => (btn.textContent = label), 1200); };
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(text).then(ok).catch(() => legacyCopy(text, ok));
+  } else legacyCopy(text, ok);
+}
+function legacyCopy(text, ok) {
+  const ta = document.createElement("textarea");
+  ta.value = text; ta.contentEditable = "true"; ta.readOnly = false;
+  ta.style.position = "fixed"; ta.style.top = "0"; ta.style.opacity = "0";
+  document.body.appendChild(ta);
+  const range = document.createRange(); range.selectNodeContents(ta);
+  const sel = getSelection(); sel.removeAllRanges(); sel.addRange(range);
+  ta.setSelectionRange(0, text.length);
+  try { document.execCommand("copy"); ok(); } catch (e) {}
+  document.body.removeChild(ta);
 }
 function sys(text) { log.appendChild(el("div", "msg sys", escapeHtml(text))); scrollDown(); }
 function escapeHtml(s) {
@@ -94,7 +129,10 @@ function renderAll() {
   if (!messages.length) {
     sys("Nouvelle conversation avec Hermes. Écris, colle, ou joins une photo / un document.");
   }
-  messages.forEach((m) => (m.role === "user" ? renderUser(m) : renderBot(m.content)));
+  messages.forEach((m) => {
+    if (m.role === "user") renderUser(m);
+    else finalizeBot(renderBot(), m.content);
+  });
   scrollDown();
 }
 
@@ -268,8 +306,12 @@ input.addEventListener("input", () => {
   input.style.height = Math.min(140, input.scrollHeight) + "px";
   updateSend();
 });
+const coarse = window.matchMedia("(pointer: coarse)").matches;
+input.enterKeyHint = coarse ? "enter" : "send";
 input.addEventListener("keydown", (e) => {
-  if (e.key === "Enter" && !e.shiftKey && !e.isComposing) { e.preventDefault(); composer.requestSubmit(); }
+  if (e.key === "Enter" && !e.shiftKey && !e.isComposing && !coarse) {
+    e.preventDefault(); composer.requestSubmit();
+  }
 });
 
 /* ---------- Envoi ---------- */
@@ -312,7 +354,7 @@ async function send() {
   abort = new AbortController();
   sendBtn.hidden = true; stopBtn.hidden = false; updateSend();
 
-  const botEl = renderBot("");
+  const botEl = renderBot();
   botEl.classList.add("cursor");
   let acc = "";
   let toolEl = null;
@@ -355,7 +397,7 @@ async function send() {
     botEl.classList.remove("cursor");
     abort = null; sendBtn.hidden = false; stopBtn.hidden = true; updateSend();
     if (acc) {
-      botEl.innerHTML = md(acc);
+      finalizeBot(botEl, acc);
       messages.push({ role: "assistant", content: acc });
     }
     saveMsgs(activeId, messages);

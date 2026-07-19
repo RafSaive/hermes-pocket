@@ -35,7 +35,12 @@ body{
 .msg .filechip{display:inline-flex;gap:6px;align-items:center;background:rgba(255,255,255,.08);border-radius:8px;padding:4px 8px;font-size:13px;margin-top:6px}
 /* Markdown */
 .msg.bot p{margin:.4em 0}
-.msg.bot pre{background:#0d1220;border:1px solid var(--line);border-radius:10px;padding:10px;overflow-x:auto;font-size:13px}
+.msg.bot pre{position:relative;background:#0d1220;border:1px solid var(--line);border-radius:10px;padding:12px 12px 12px;overflow-x:auto;font-size:13px}
+.codecopy{position:absolute;top:6px;right:6px;background:#263041;color:var(--mut);border:none;border-radius:6px;font-size:11px;padding:3px 9px;cursor:pointer}
+.codecopy:active{background:var(--me);color:#fff}
+.msgtools{margin-top:10px;display:flex;gap:8px}
+.msgtools button{background:none;border:1px solid var(--line);color:var(--mut);font-size:12px;cursor:pointer;padding:4px 10px;border-radius:8px}
+.msgtools button:active{background:var(--c2);color:var(--txt)}
 .msg.bot code{font-family:ui-monospace,Menlo,monospace;font-size:.9em}
 .msg.bot :not(pre)>code{background:rgba(255,255,255,.08);padding:1px 5px;border-radius:5px}
 .msg.bot a{color:#93c5fd}
